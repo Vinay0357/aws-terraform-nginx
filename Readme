@@ -3,3 +3,11 @@ Create EC2 instance (use one of free tier instances) which will serve html page 
 Name the instance recngx01Add another EC2 instance (the same type as the one that you already created) in the same VPC but a different availability zone. 
 Name it recngx02On recngx02, add nginx service, same as on recngx01Create AWS load balancer (decide if ELB, ALB, NLB) and add both instances to it (recngx01 and recngx02)Modify the Maintenance Page to show which server did respond to the request (decide how to identify server - ip, name, domain, etc)Make sure that nginx docker container is started when EC2 instance is restarted - document the solution on how to do it.
 Make sure that nginx docker container is started automatically (without manual steps) after the instance is provisioned with terraform - document the solution on how to do it.
+
+In our example, we’ll use Terraform to provision two free‑tier EC2 instances (named: recngx01 and recngx02) in different availability zones
+within the same VPC. On each instance we’ll install Docker and run a container that uses an image built from our custom Dockerfile.
+The container uses an Nginx base image but adds a small Python script (our app.py) that “renders” a maintenance page (from an HTML template)
+by injecting an environment variable (for example, the instance name or IP).
+Finally, we’ll create an Application Load Balancer (ALB) to route HTTP traffic to both instances.
+The container is run with Docker’s restart policy so that it automatically starts after instance reboot, and our Terraform “user_data” script
+ensures that the container is launched automatically on provisioning. (Note: There are several ways to achieve these goals; the following is one complete example.)
