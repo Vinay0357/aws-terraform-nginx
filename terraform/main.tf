@@ -7,6 +7,29 @@ resource "aws_vpc" "example" {
   cidr_block = "10.0.0.0/16"
 }
 
+# Create an Internet Gateway
+resource "aws_internet_gateway" "example" {
+  vpc_id = aws_vpc.example.id
+
+  tags = {
+    Name = "example-igw"
+  }
+}
+
+# Create a route table
+resource "aws_route_table" "example" {
+  vpc_id = aws_vpc.example.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.example.id
+  }
+
+  tags = {
+    Name = "example-rt"
+  }
+}
+
 # Create subnets
 resource "aws_subnet" "subnet1" {
   cidr_block = "10.0.1.0/24"
@@ -18,6 +41,17 @@ resource "aws_subnet" "subnet2" {
   cidr_block = "10.0.2.0/24"
   vpc_id     = aws_vpc.example.id
   availability_zone = "us-west-2b"
+}
+
+# Associate route table with subnets
+resource "aws_route_table_association" "subnet1" {
+  subnet_id      = aws_subnet.subnet1.id
+  route_table_id = aws_route_table.example.id
+}
+
+resource "aws_route_table_association" "subnet2" {
+  subnet_id      = aws_subnet.subnet2.id
+  route_table_id = aws_route_table.example.id
 }
 
 # Create security group for EC2 instances
@@ -50,11 +84,12 @@ resource "aws_security_group" "example" {
 
 # Create EC2 instances
 resource "aws_instance" "recngx01" {
-  ami           = "ami-0c94855ba95c71c99"
+  ami           = "ami-027951e78de46a00e" # Replace with a valid AMI ID
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.subnet1.id
   vpc_security_group_ids = [aws_security_group.example.id]
-  key_name               = "your_key_name"
+  key_name = "terraform-test"
+  associate_public_ip_address = true
 
   user_data = <<-EOF
               #!/bin/bash
@@ -72,11 +107,12 @@ resource "aws_instance" "recngx01" {
 }
 
 resource "aws_instance" "recngx02" {
-  ami           = "ami-0c94855ba95c71c99"
+  ami           = "ami-027951e78de46a00e" # Replace with a valid AMI ID
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.subnet2.id
   vpc_security_group_ids = [aws_security_group.example.id]
-  key_name               = "your_key_name"
+  key_name = "terraform-test"
+  associate_public_ip_address = true
 
   user_data = <<-EOF
               #!/bin/bash
@@ -146,3 +182,4 @@ resource "aws_lb_listener" "example" {
     type             = "forward"
   }
 }
+
