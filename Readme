@@ -1,0 +1,5 @@
+This is for Task 1:
+Create EC2 instance (use one of free tier instances) which will serve html page with some maintenance information. You should use docker for running the container. 
+Name the instance recngx01Add another EC2 instance (the same type as the one that you already created) in the same VPC but a different availability zone. 
+Name it recngx02On recngx02, add nginx service, same as on recngx01Create AWS load balancer (decide if ELB, ALB, NLB) and add both instances to it (recngx01 and recngx02)Modify the Maintenance Page to show which server did respond to the request (decide how to identify server - ip, name, domain, etc)Make sure that nginx docker container is started when EC2 instance is restarted - document the solution on how to do it.
+Make sure that nginx docker container is started automatically (without manual steps) after the instance is provisioned with terraform - document the solution on how to do it.
