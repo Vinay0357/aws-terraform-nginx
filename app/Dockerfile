@@ -1,9 +1,5 @@
 FROM nginx:latest
-
 COPY index.html /usr/share/nginx/html/index.html
-
-COPY entrypoint.sh /entrypoint.sh
-
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+CMD ["/start.sh"]
