@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maintenance</title>
+</head>
+<body>
+    <h1>Site Under Maintenance</h1>
+    <p>This site is currently under maintenance.</p>
+    <h2>Served by: <span id="server-name"></span></h2>
+
+    <script>
+        fetch('/server-info')
+            .then(response => response.text())
+            .then(data => document.getElementById('server-name').innerText = data);
+    </script>
+</body>
+</html>

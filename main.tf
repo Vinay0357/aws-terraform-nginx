@@ -182,3 +182,7 @@ resource "aws_lb_listener" "example" {
     type             = "forward"
   }
 }
+
+output "load_balancer_dns" {
+  value = aws_lb.example.dns_name
+}
