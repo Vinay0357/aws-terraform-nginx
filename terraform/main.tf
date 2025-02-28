@@ -182,4 +182,3 @@ resource "aws_lb_listener" "example" {
     type             = "forward"
   }
 }
-
